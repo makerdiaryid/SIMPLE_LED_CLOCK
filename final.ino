@@ -4,9 +4,12 @@
 #include <Adafruit_NeoPixel.h>
 
 
-const char *ssid     = "HAMMER INNOVATION LAB";
-const char *password = "curiosityisgood";
-const long utcOffsetInSeconds = 28800;
+const char *ssid     = "WIFI SSID";
+const char *password = "WIFI PASS";
+//const long utcOffsetInSeconds = 25200;//WIB
+const long utcOffsetInSeconds = 28800;//WITA
+//const long utcOffsetInSeconds = 32400;//WIT
+
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
@@ -86,6 +89,8 @@ void setup(){
       quaverp=quaver*1.5;
       semiquaver= black/4;
       semiquaverp=semiquaver*1.5;
+
+  pinMode(2, INPUT_PULLUP);
   
 }
 
@@ -106,6 +111,12 @@ void loop() {
   
     baseclock();
   }
+
+    if(checkhuman()){
+      humanstat=0;
+    }else{
+      humanstat++;
+    }
 }
 
 void baseclock(){
@@ -131,17 +142,13 @@ void baseclock(){
   }
 
   clockpixels.show();
-    if(timeClient.getMinutes()==0){
+    if(timeClient.getMinutes()==0 && digitalRead(2)!=HIGH){
        alarm();
     }else{
        delay(5000);
     }
 
-    if(checkhuman()){
-      humanstat=0;
-    }else{
-      humanstat++;
-    }
+  
 }
 
 void stanbyclock(){
